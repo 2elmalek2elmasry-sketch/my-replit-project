@@ -17,7 +17,7 @@
     }
 
     .light-mode {
-        --bg-color: #f9fafb;
+        --bg-color: #f3f4f6;
         --text-color: #111827;
         --royal-black: #ffffff;
     }
@@ -26,7 +26,7 @@
         font-family: 'Inter', sans-serif;
         background-color: var(--bg-color);
         color: var(--text-color);
-        transition: background 0.3s, color 0.3s;
+        transition: all 0.3s ease;
         -webkit-user-select: none;
         user-select: none;
     }
@@ -42,13 +42,13 @@
     .book-card {
         transition: all 0.4s ease;
         border: 1px solid #2d2d2d;
-        background: rgba(20, 20, 20, 0.8);
+        background: rgba(20, 20, 20, 0.9);
     }
 
     .book-card:hover {
         transform: translateY(-10px);
         border-color: var(--primary-gold);
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
     }
 
     .premium-button {
@@ -71,101 +71,151 @@
     .modal-overlay {
         position: fixed; inset: 0; background: rgba(0,0,0,0.95);
         display: none; justify-content: center; align-items: center; z-index: 1000;
+        padding: 20px;
     }
 
     .checkout-input {
         background-color: #1a1a1a;
         border: 1px solid #333;
         color: white;
-        padding: 0.75rem;
+        padding: 0.8rem;
         border-radius: 0.5rem;
         width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Floating UI Stack */
+    .floating-controls {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 999;
     }
 </style>
 </head>
 <body oncontextmenu="return false;">
 
-<header class="bg-black/90 sticky top-0 z-50 border-b border-yellow-900">
+<header class="bg-black/95 sticky top-0 z-50 border-b border-yellow-900">
   <div class="container mx-auto px-4 py-4 flex justify-between items-center">
     <a href="#" class="text-2xl md:text-3xl font-black gold-gradient-text tracking-widest royal-font">KING BOOKS</a>
     
-    <div class="flex items-center space-x-4">
-        <button id="theme-toggle" class="text-yellow-500 text-xl p-2">🌞/🌙</button>
-        <div id="user-avatar" class="hidden w-10 h-10 rounded-full bg-yellow-600 flex items-center justify-center font-bold text-black cursor-pointer"></div>
-        <button id="sign-btn" onclick="openAuth()" class="premium-button px-4 py-2 rounded-full text-xs md:text-sm">LOGIN</button>
+    <div class="flex items-center space-x-6">
+        <nav class="hidden md:flex space-x-6 royal-font text-sm">
+            <a href="#library" class="hover:text-yellow-500">Archive</a>
+            <a href="#drop" class="hover:text-yellow-500">Drops</a>
+        </nav>
+        <div id="user-avatar" class="hidden w-10 h-10 rounded-full bg-yellow-600 flex items-center justify-center font-bold text-black border-2 border-yellow-400 cursor-pointer"></div>
+        <button id="sign-btn" onclick="openAuth()" class="premium-button px-6 py-2 rounded-full text-xs">LOG IN</button>
     </div>
   </div>
 </header>
 
-<section class="py-20 text-center bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')]">
-    <h1 class="text-5xl md:text-7xl font-black gold-gradient-text mb-4 royal-font">THE ROYAL ARCHIVE</h1>
-    <p class="text-xl text-gray-400 mb-8 italic">Next Manuscript Drop In:</p>
-    <div id="drop-timer" class="text-4xl font-bold text-yellow-500 tracking-tighter mb-10">00d 00h 00m 00s</div>
-    <a href="#library" class="premium-button py-4 px-10 rounded-full uppercase tracking-widest">Enter Library</a>
+<section class="h-[75vh] flex flex-col items-center justify-center text-center px-4 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')]">
+    <h1 class="text-5xl md:text-8xl font-black gold-gradient-text mb-6 royal-font">THE ROYAL ARCHIVE</h1>
+    <div id="drop" class="mb-10 p-6 bg-black/40 rounded-2xl border border-yellow-900/50 backdrop-blur-md">
+        <p class="text-yellow-500 uppercase tracking-[0.3em] text-sm mb-2">Next Bi-Weekly Manuscript Drop</p>
+        <div id="drop-timer" class="text-4xl md:text-6xl font-bold tracking-tighter">00d 00h 00m 00s</div>
+    </div>
+    <a href="#library" class="premium-button py-4 px-12 rounded-full uppercase tracking-widest text-lg shadow-[0_0_30px_rgba(255,215,0,0.2)]">View Manuscripts</a>
 </section>
 
-<section id="library" class="py-20 container mx-auto px-4">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="book-card p-6 rounded-xl text-center">
-            <img src="https://images.unsplash.com/photo-1543005128-d64e403987d3?w=500" class="w-full h-80 object-cover rounded-lg mb-6 shadow-2xl">
+<section id="library" class="py-24 container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="book-card p-6 rounded-2xl border-t-4 border-t-yellow-600">
+            <img src="https://images.unsplash.com/photo-1543005128-d64e403987d3?w=600" class="w-full h-96 object-cover rounded-lg mb-6 shadow-2xl transition-all duration-500 grayscale hover:grayscale-0">
             <h3 class="text-2xl font-bold text-yellow-500 mb-2 royal-font">The Pharaoh's Legacy</h3>
-            <p class="text-gray-500 mb-4">Price: <span class="price-tag" data-egp="500">EGP 500</span></p>
-            <div class="flex gap-2">
-                <button onclick="openBook('The Pharaoh\'s Legacy', 'The sands of Egypt hide many secrets...')" class="flex-1 bg-zinc-800 py-3 rounded-lg hover:bg-zinc-700 transition">Read Preview</button>
-                <button onclick="openCheckout('The Pharaoh\'s Legacy', 500)" class="flex-1 premium-button py-3 rounded-lg">Buy Access</button>
+            <p class="text-gray-400 mb-6 text-sm">Uncover the forbidden history of the first dynasty.</p>
+            <div class="flex flex-col gap-3">
+                <p class="text-2xl font-black text-white"><span class="price-tag" data-egp="850">EGP 850</span></p>
+                <div class="flex gap-2">
+                    <button onclick="openBook('The Pharaoh\'s Legacy', 'The sands of Egypt hide many secrets...')" class="flex-1 bg-zinc-800 text-white py-3 rounded-lg hover:bg-zinc-700 transition">Read Preview</button>
+                    <button onclick="openCheckout('The Pharaoh\'s Legacy', 850)" class="flex-1 premium-button py-3 rounded-lg">Buy Access</button>
+                </div>
             </div>
         </div>
         </div>
 </section>
 
-<div id="book-modal" class="modal-overlay">
-    <div class="max-w-4xl mx-auto my-10 relative px-4 w-full">
-        <button onclick="closeBook()" class="fixed top-5 right-5 text-white text-4xl">&times;</button>
-        <div id="reading-room" class="p-10 md:p-20 rounded shadow-2xl min-h-screen">
-            <h1 id="book-title" class="text-4xl font-black mb-10 border-b border-yellow-900 pb-4 royal-font"></h1>
-            <div id="book-content" class="text-xl text-justify leading-relaxed"></div>
-        </div>
-    </div>
+<div class="floating-controls">
+    <button id="theme-toggle" class="bg-zinc-900 text-yellow-500 w-14 h-14 rounded-full shadow-2xl border border-yellow-600 flex items-center justify-center text-xl">
+        <i class="fas fa-adjust"></i>
+    </button>
+    <button id="currency-btn" onclick="toggleCurrency()" class="premium-button w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl">
+        <span id="current-currency" class="text-xs font-black">EGP</span>
+    </button>
 </div>
 
 <div id="checkout-modal" class="modal-overlay">
-    <div class="bg-zinc-900 p-8 rounded-2xl border-2 border-yellow-600 max-w-md w-full relative">
-        <button onclick="closeModals()" class="absolute top-4 right-4 text-white text-2xl">&times;</button>
-        <h2 class="text-2xl font-bold gold-gradient-text mb-6 royal-font">Quick Checkout</h2>
-        <div class="mb-4 text-gray-400">Buying: <span id="checkout-item-name" class="text-yellow-500 font-bold"></span></div>
-        <form onsubmit="processPayment(event)">
-            <input type="text" placeholder="Full Name" required class="checkout-input mb-4">
-            <input type="email" placeholder="Email for Delivery" required class="checkout-input mb-4">
-            <div class="text-xs text-red-400 mb-4 italic">Redirecting to secure PayPal gateway...</div>
-            <button type="submit" class="premium-button w-full py-4 rounded-xl">Pay with PayPal</button>
+    <div class="bg-zinc-900 p-8 rounded-3xl border-2 border-yellow-600 max-w-lg w-full relative max-h-[90vh] overflow-y-auto">
+        <button onclick="closeModals()" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
+        <h2 class="text-3xl font-bold gold-gradient-text mb-2 royal-font">Order Manuscript</h2>
+        <p class="text-gray-500 mb-6 text-sm">Item: <span id="checkout-item-name" class="text-yellow-500"></span></p>
+        
+        <form onsubmit="processPayment(event)" class="space-y-1">
+            <label class="text-xs uppercase text-yellow-600 font-bold">Personal Information</label>
+            <input type="text" placeholder="Full Name" required class="checkout-input">
+            <input type="tel" placeholder="WhatsApp / Phone Number" required class="checkout-input">
+            <input type="email" placeholder="Email Address (For Manuscript Delivery)" required class="checkout-input">
+            
+            <label class="text-xs uppercase text-yellow-600 font-bold mt-4 block">Shipping / Billing Address</label>
+            <input type="text" placeholder="Street Address" required class="checkout-input">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="text" placeholder="City" required class="checkout-input">
+                <input type="text" placeholder="Country" required class="checkout-input">
+            </div>
+
+            <label class="text-xs uppercase text-yellow-600 font-bold mt-4 block">Payment Method</label>
+            <select class="checkout-input mb-6">
+                <option>PayPal / Credit Card</option>
+                <option>InstaPay (Egypt Only)</option>
+                <option>Vodafone Cash</option>
+            </select>
+
+            <button type="submit" class="premium-button w-full py-4 rounded-xl text-lg mt-4">Proceed to Secure Payment</button>
         </form>
+    </div>
+</div>
+
+<div id="book-modal" class="modal-overlay">
+    <div class="max-w-4xl mx-auto relative w-full">
+        <button onclick="closeBook()" class="fixed top-5 right-5 text-white text-5xl z-[1001]">&times;</button>
+        <div id="reading-room" class="p-8 md:p-20 rounded shadow-2xl min-h-screen unselectable">
+            <h1 id="book-title" class="text-4xl font-black mb-10 border-b-2 border-yellow-900/20 pb-4 royal-font"></h1>
+            <div id="book-content" class="text-xl text-justify leading-loose"></div>
+            <div class="mt-20 text-center opacity-30 italic text-sm">End of Preview. Purchase the full manuscript to unlock all chapters.</div>
+        </div>
     </div>
 </div>
 
 <div id="auth-modal" class="modal-overlay">
     <div class="bg-zinc-900 p-8 rounded-2xl border border-yellow-600 text-center max-w-sm w-full">
         <h2 class="text-2xl font-bold gold-gradient-text mb-6 royal-font">Join the Archive</h2>
-        <button onclick="handleLogin()" class="w-full bg-white text-black font-bold py-3 rounded-lg mb-4 flex items-center justify-center gap-2">
+        <button onclick="handleLogin()" class="w-full bg-white text-black font-bold py-3 rounded-lg mb-4 flex items-center justify-center gap-2 hover:bg-gray-200 transition">
             <i class="fab fa-google"></i> Continue with Google
         </button>
-        <button onclick="closeModals()" class="text-gray-500">Cancel</button>
+        <button onclick="closeModals()" class="text-gray-500 text-sm">Cancel</button>
     </div>
 </div>
 
-<button id="currency-btn" onclick="toggleCurrency()" class="fixed bottom-6 left-6 premium-button p-4 rounded-full shadow-2xl z-50">
-    <i class="fas fa-coins mr-2"></i> <span id="current-currency">EGP</span>
-</button>
-
 <script>
     // --- SETTINGS ---
-    const ROYAL_PASS = "KING2026";
     let currentCurrency = "EGP";
-    const exchangeRates = { "USD": 0.020, "EUR": 0.019, "EGP": 1 };
+    const exchangeRates = { "USD": 0.020, "EGP": 1 };
 
-    // --- DROP TIMER LOGIC ---
+    // --- BI-WEEKLY DROP TIMER (Every 2nd Friday) ---
     function updateTimer() {
-        const nextDrop = new Date("2026-12-31T23:59:59").getTime(); // Set your brother's next drop date
+        const referenceFriday = new Date("2026-02-27T11:00:00Z").getTime(); // Starting Friday
+        const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000;
         const now = new Date().getTime();
+        
+        let nextDrop = referenceFriday;
+        while (nextDrop < now) {
+            nextDrop += TWO_WEEKS;
+        }
+
         const diff = nextDrop - now;
         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
         const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -175,7 +225,7 @@
     }
     setInterval(updateTimer, 1000);
 
-    // --- CURRENCY LOGIC ---
+    // --- CURRENCY & THEME ---
     function toggleCurrency() {
         currentCurrency = currentCurrency === "EGP" ? "USD" : "EGP";
         document.getElementById("current-currency").innerText = currentCurrency;
@@ -185,41 +235,43 @@
         });
     }
 
-    // --- AUTH LOGIC ---
-    function openAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
-    function handleLogin() {
-        // Mock Login
-        document.getElementById('user-avatar').style.display = 'flex';
-        document.getElementById('user-avatar').innerText = "K";
-        document.getElementById('sign-btn').style.display = 'none';
-        closeModals();
-    }
-
-    // --- THEME LOGIC ---
     document.getElementById('theme-toggle').onclick = () => {
         document.body.classList.toggle('light-mode');
     };
 
-    // --- MODAL CONTROLS ---
+    // --- MODALS ---
     function openBook(title, content) {
         document.getElementById('book-title').innerText = title;
-        document.getElementById('book-content').innerText = content;
+        document.getElementById('book-content').innerText = content + " " + ".".repeat(500);
         document.getElementById('book-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
-    function closeBook() { document.getElementById('book-modal').style.display = 'none'; }
-    
+    function closeBook() { 
+        document.getElementById('book-modal').style.display = 'none'; 
+        document.body.style.overflow = 'auto';
+    }
     function openCheckout(name, price) {
         document.getElementById('checkout-item-name').innerText = name;
         document.getElementById('checkout-modal').style.display = 'flex';
     }
+    function openAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
     function closeModals() {
         document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        document.body.style.overflow = 'auto';
+    }
+
+    function handleLogin() {
+        const av = document.getElementById('user-avatar');
+        av.style.display = 'flex';
+        av.innerText = "K";
+        document.getElementById('sign-btn').style.display = 'none';
+        closeModals();
     }
 
     function processPayment(e) {
         e.preventDefault();
-        window.open("https://paypal.me/YOUR_USER_NAME", "_blank"); // Replace with your brother's PayPal
-        alert("Redirecting to PayPal. Once paid, the manuscript link will be sent to your email.");
+        alert("Data Secured. Redirecting to Payment Gateway...");
+        window.open("https://paypal.me/YOUR_LINK", "_blank");
     }
 
     // --- SECURITY ---
@@ -228,11 +280,14 @@
     });
 </script>
 
-<footer class="bg-black py-12 border-t border-yellow-900 text-center">
-    <div class="flex justify-center gap-6 mb-6 text-2xl text-yellow-500">
-        <i class="fab fa-instagram"></i> <i class="fab fa-tiktok"></i> <i class="fab fa-facebook"></i>
+<footer class="bg-black py-16 border-t border-yellow-900 text-center">
+    <div class="flex justify-center gap-8 mb-8 text-3xl text-yellow-600">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
     </div>
-    <p class="royal-font gold-gradient-text text-xl">KING BOOKS &copy; 2026</p>
+    <p class="royal-font gold-gradient-text text-2xl mb-2">KING BOOKS</p>
+    <p class="text-gray-600 text-xs tracking-widest uppercase">The Sovereign Choice for Knowledge</p>
 </footer>
 
 </body>
